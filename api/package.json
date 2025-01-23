@@ -1,0 +1,49 @@
+{
+  "type": "module",
+  "name": "mag-api",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/index.js",
+    "test": "jest --runInBand",
+    "test:watch": "jest --runInBand --watch",
+    "lint": "eslint 'src/**/*.{ts,tsx,js,mjs}'",
+    "lint:fix": "eslint 'src/**/*.{ts,tsx,js,mjs}' --fix",
+    "format": "prettier --write '**/*.{ts,tsx,js,mjs,json,css,html}'",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:studio": "prisma studio"
+  },
+  "keywords": [],
+  "author": "Rheza Sindhuwinata <rheza.s@gmail.com>",
+  "license": "ISC",
+  "description": "Library management system",
+  "dependencies": {
+    "@fastify/swagger": "^9.4.2",
+    "@prisma/client": "^6.2.1",
+    "fastify": "^5.2.1",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.18.0",
+    "@types/jest": "^29.5.14",
+    "@types/supertest": "^6.0.2",
+    "@typescript-eslint/eslint-plugin": "^8.21.0",
+    "@typescript-eslint/parser": "^8.21.0",
+    "cross-env": "^7.0.3",
+    "eslint": "^9.18.0",
+    "eslint-config-prettier": "^10.0.1",
+    "eslint-plugin-prettier": "^5.2.3",
+    "globals": "^15.14.0",
+    "jest": "^29.7.0",
+    "prettier": "^3.4.2",
+    "prisma": "^6.2.1",
+    "supertest": "^7.0.0",
+    "ts-jest": "^29.2.5",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.21.0"
+  }
+}

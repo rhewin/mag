@@ -1,0 +1,68 @@
+# Node.js dependencies
+node_modules/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# TypeScript build output
+dist/
+build/
+*.tsbuildinfo
+
+# Prisma
+.prisma/
+prisma/migrations/
+
+# Jest test output
+coverage/
+.jest/
+
+# VSCode settings
+.vscode/
+*.code-workspace
+
+# Docker files
+.docker/
+docker-compose.override.yml
+db_data/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.idea/
+*.iml
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# Prettier and ESLint cache
+.prettiercache
+.eslintcache
+
+# Miscellaneous
+*.pid
+*.seed
+*.tgz
+*.bak
+*.swp
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+
+# GitHub Actions and workflows
+.github/
