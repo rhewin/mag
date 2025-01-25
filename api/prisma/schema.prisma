@@ -40,7 +40,7 @@ model Member {
   phone      String?
   status     String   @default("active")
   joinedDate DateTime @default(now())
-  createdBy  Int
+  modifiedBy Int
   createdAt  DateTime @default(now())
   updatedAt  DateTime?
   deletedAt  DateTime?
@@ -61,7 +61,7 @@ model Book {
   isbn       String   @unique
   quantity   Int
   categoryId Int
-  createdBy  Int
+  modifiedBy Int
   createdAt  DateTime @default(now())
   updatedAt  DateTime?
   deletedAt  DateTime?
@@ -93,7 +93,7 @@ model Lending {
   dueDate      DateTime
   returnDate   DateTime?
   status       String   @default("borrowed")
-  createdBy    Int
+  modifiedBy   Int
   createdAt    DateTime @default(now())
   updatedAt    DateTime?
   deletedAt    DateTime?
