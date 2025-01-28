@@ -1,12 +1,12 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 import { jsonError } from '../utils/util.jsonResponse';
-import { IBookRequestCreate } from '../book/book';
-import * as bookController from '../book/book.controller';
-import * as query from '../book/book.query';
-import * as queryDep from '../book/book.dep.query';
+import { IMemberRequestCreate } from '../member/member';
+import * as memberController from '../member/member.controller';
+import * as query from '../member/member.query';
+import * as util from '../utils/util.formatter';
 
 jest.mock('../utils/util.jsonResponse');
-jest.mock('../book/book.query', () => ({
+jest.mock('../member/member.query', () => ({
   listAll: jest.fn() as jest.Mock<() => Promise<any[]>>,
   create: jest.fn(),
   update: jest.fn(),
@@ -16,26 +16,23 @@ jest.mock('../book/book.query', () => ({
   jsonError: jest.fn()
 }));
 
-jest.mock('../book/book.dep.query', () => ({
-  upsertBookStatus: jest.fn()
-}));
-
-describe('Book Controller Tests', () => {
+describe('Member Controller Tests', () => {
   let mockReq: Partial<FastifyRequest>;
   let mockRes: Partial<FastifyReply>;
-  let mockBooks: any[];
-  let mockBook: any;
+  let mockMembers: any[];
+  let mockMember: any;
 
   beforeEach(() => {
     jest.clearAllMocks();
-    mockBooks = [
+    mockMembers = [
       {
         id: 1,
-        title: 'Book 1',
-        author: 'Author 1',
-        isbn: '978-3-16-148410-0',
-        quantity: 10,
-        categoryId: 1,
+        memberId: 'WKFISD234',
+        firstname: 'Abraham',
+        lastname: 'Lincoln',
+        email: 'abraham@gmail.com',
+        phone: '092547023',
+        status: 'active',
         modifiedBy: 1,
         createdAt: new Date(),
         updatedAt: null,
@@ -43,11 +40,12 @@ describe('Book Controller Tests', () => {
       },
       {
         id: 2,
-        title: 'Book 2',
-        author: 'Author 2',
-        isbn: '978-3-16-142510-0',
-        quantity: 5,
-        categoryId: 2,
+        memberId: 'HE7E71W5',
+        firstname: 'Brian',
+        lastname: 'Don',
+        email: 'brian@abc.com',
+        phone: '09453023',
+        status: 'active',
         modifiedBy: 1,
         createdAt: new Date(),
         updatedAt: null,
@@ -55,7 +53,7 @@ describe('Book Controller Tests', () => {
       },
     ];
 
-    mockBook = mockBooks[0];
+    mockMember = mockMembers[0];
 
     mockReq = {
       user: {
@@ -74,26 +72,26 @@ describe('Book Controller Tests', () => {
       status: jest.fn().mockReturnThis()
     };
 
-    jest.spyOn(query, 'listAll').mockResolvedValue(mockBooks);
-    jest.spyOn(query, 'create').mockResolvedValue(mockBook);
-    jest.spyOn(query, 'update').mockResolvedValue(mockBook);
-    jest.spyOn(query, 'deleteById').mockResolvedValue({ ...mockBook, deletedAt: new Date() });
+    jest.spyOn(query, 'listAll').mockResolvedValue(mockMembers);
+    jest.spyOn(query, 'create').mockResolvedValue(mockMember);
+    jest.spyOn(query, 'update').mockResolvedValue(mockMember);
+    jest.spyOn(query, 'deleteById').mockResolvedValue({ ...mockMember, deletedAt: new Date() });
     jest.spyOn(query, 'count').mockResolvedValue(0);
   });
 
-  describe('listBook', () => {
-    it('should return paginated list of books', async () => {
+  describe('listMember', () => {
+    it('should return paginated list of members', async () => {
       mockReq.query = { pageNum: 1, perPage: 10 };
       const mockTotalRecords = 1;
 
-      (query.listAll as jest.Mock).mockResolvedValue(mockBooks);
+      (query.listAll as jest.Mock).mockResolvedValue(mockMembers);
       (query.count as jest.Mock).mockResolvedValue(mockTotalRecords);
 
-      await bookController.listBook(mockReq as FastifyRequest, mockRes as FastifyReply);
+      await memberController.listMember(mockReq as FastifyRequest, mockRes as FastifyReply);
 
       expect(query.listAll).toHaveBeenCalledWith(0, 10);
       expect(mockRes.send).toHaveBeenCalledWith({
-        data: mockBooks,
+        data: mockMembers,
         pagination: {
           pageNum: 1,
           perPage: 10,
@@ -106,7 +104,7 @@ describe('Book Controller Tests', () => {
     it('should return 400 if validation fails', async () => {
       mockReq.query = { pageNum: 'invalid' };
 
-      await bookController.listBook(mockReq as FastifyRequest, mockRes as FastifyReply);
+      await memberController.listMember(mockReq as FastifyRequest, mockRes as FastifyReply);
 
       expect(jsonError).toHaveBeenCalledWith({
         req: mockReq,
@@ -118,42 +116,46 @@ describe('Book Controller Tests', () => {
     });
   });
 
-  describe('createBook', () => {
-    it('should create a book successfully', async () => {
-      const mockCreate: IBookRequestCreate = {
-        title: 'New Book',
-        author: 'Author',
-        isbn: '978-3-16-148410-0',
-        quantity: 10,
-        categoryId: 1,
-        modifiedBy: 1,
+  describe('createMember', () => {
+    it('should create a member successfully', async () => {
+      jest.spyOn(util, 'genInternalUniqueId').mockReturnValue('HE7E71W5');
+
+      const mockCreate: IMemberRequestCreate = {
+        memberId: 'HE7E71W5',
+        firstname: 'Margaret',
+        lastname: 'Tatcher',
+        email: 'margaret@abc.com',
+        phone: '09453023',
+        status: 'active',
+        modifiedBy: 1
       };
 
       mockReq.body = mockCreate;
-      const mockCreatedBook = { ...mockCreate };
+      const mockCreatedMember = { ...mockCreate };
 
-      (query.create as jest.Mock).mockResolvedValue(mockCreatedBook);
-      (queryDep.upsertBookStatus as jest.Mock).mockResolvedValue(null);
+      (query.create as jest.Mock).mockResolvedValue(mockCreatedMember);
 
-      await bookController.createBook(mockReq as FastifyRequest, mockRes as FastifyReply);
+      await memberController.createMember(mockReq as FastifyRequest, mockRes as FastifyReply);
 
       expect(query.create).toHaveBeenCalledWith(expect.objectContaining(mockCreate));
       expect(mockRes.code).toHaveBeenCalledWith(201);
-      expect(mockRes.send).toHaveBeenCalledWith(mockCreatedBook);
+      expect(mockRes.send).toHaveBeenCalledWith(mockCreatedMember);
     });
 
     it('should return 400 if validation fails', async () => {
-      const mockCreate: IBookRequestCreate = {
-        title: '',
-        author: '',
-        isbn: '978-3-16-148410-0',
-        quantity: 10,
-        categoryId: 1,
-        modifiedBy: 1,
+      const mockCreate: IMemberRequestCreate = {
+        memberId: 'HE7E71W5',
+        firstname: '',
+        lastname: 'Tatcher',
+        email: 'margaret@abc.com',
+        phone: '09453023',
+        status: 'active',
+        modifiedBy: 1
       };
+
       mockReq.body = mockCreate;
 
-      await bookController.createBook(mockReq as FastifyRequest, mockRes as FastifyReply);
+      await memberController.createMember(mockReq as FastifyRequest, mockRes as FastifyReply);
 
       expect(jsonError).toHaveBeenCalledWith({
         req: mockReq,
@@ -164,11 +166,11 @@ describe('Book Controller Tests', () => {
       });
     });
 
-    it('should return 500 if an error occurs while creating book', async () => {
-      mockReq.body = mockBook;
+    it('should return 500 if an error occurs while creating member', async () => {
+      mockReq.body = mockMember;
 
       jest.spyOn(query, 'create').mockRejectedValue(new Error('Creation error'));
-      await bookController.createBook(mockReq as FastifyRequest, mockRes as FastifyReply);
+      await memberController.createMember(mockReq as FastifyRequest, mockRes as FastifyReply);
 
       expect(jsonError).toHaveBeenCalledWith({
         req: mockReq,
@@ -180,8 +182,8 @@ describe('Book Controller Tests', () => {
     });
   });
 
-  describe('updateBook', () => {
-    it('should update a book successfully', async () => {
+  describe('updateMember', () => {
+    it('should update a member successfully', async () => {
       mockReq = {
         user: {
           id: 1,
@@ -190,19 +192,17 @@ describe('Book Controller Tests', () => {
         },
         params: { id: 1 },
         body: {
-          title: 'Test Update Book'
+          firstname: 'aden'
         },
       };
 
-      const mockUpdatedBook = { ...mockBook, id: 1 };
-      // (queryDep.upsertBookStatus as jest.Mock).mockResolvedValue(null);
-      jest.spyOn(query, 'getFirst').mockResolvedValue(mockUpdatedBook);
-      jest.spyOn(query, 'update').mockResolvedValue(mockUpdatedBook);
-      jest.spyOn(bookController, 'updateBookStatus').mockResolvedValue(undefined);
+      const mockUpdatedMember = { ...mockMember, id: 1 };
+      jest.spyOn(query, 'getFirst').mockResolvedValue(mockUpdatedMember);
+      jest.spyOn(query, 'update').mockResolvedValue(mockUpdatedMember);
 
-      await bookController.updateBook(mockReq as FastifyRequest, mockRes as FastifyReply);
+      await memberController.updateMember(mockReq as FastifyRequest, mockRes as FastifyReply);
 
-      expect(mockRes.send).toHaveBeenCalledWith(mockUpdatedBook);
+      expect(mockRes.send).toHaveBeenCalledWith(mockUpdatedMember);
     });
 
     it('should return 400 if validation fails', async () => {
@@ -211,7 +211,7 @@ describe('Book Controller Tests', () => {
       mockReq.params = { id: mockId };
       mockReq.body = mockData;
 
-      await bookController.updateBook(mockReq as FastifyRequest, mockRes as FastifyReply);
+      await memberController.updateMember(mockReq as FastifyRequest, mockRes as FastifyReply);
 
       expect(jsonError).toHaveBeenCalledWith({
         req: mockReq,
@@ -222,14 +222,14 @@ describe('Book Controller Tests', () => {
       });
     });
 
-    it('should return 404 if the book is not found', async () => {
+    it('should return 404 if the member is not found', async () => {
       const mockData: any = { title: '' };
       mockReq.params = { id: 1 };
       mockReq.body = mockData;
 
       jest.spyOn(query, 'getFirst').mockResolvedValue(null);
 
-      await bookController.updateBook(mockReq as FastifyRequest, mockRes as FastifyReply);
+      await memberController.updateMember(mockReq as FastifyRequest, mockRes as FastifyReply);
 
       expect(jsonError).toHaveBeenCalledWith({
         req: mockReq,
@@ -240,23 +240,23 @@ describe('Book Controller Tests', () => {
     });
   });
 
-  describe('deleteBook', () => {
-    it('should delete a book successfully', async () => {
+  describe('deleteMember', () => {
+    it('should delete a member successfully', async () => {
       mockReq.params = { id: 1 };
 
-      jest.spyOn(query, 'getFirst').mockResolvedValue(mockBook);
-      jest.spyOn(bookController, 'isBookExists').mockResolvedValue(true);
+      jest.spyOn(query, 'getFirst').mockResolvedValue(mockMember);
+      jest.spyOn(memberController, 'isMemberExists').mockResolvedValue(true);
 
-      await bookController.deleteBook(mockReq as FastifyRequest, mockRes as FastifyReply);
+      await memberController.deleteMember(mockReq as FastifyRequest, mockRes as FastifyReply);
 
       expect(mockRes.send).toHaveBeenCalledWith({ message: 'Data deleted successfully' });
     });
 
     it('should return 400 if validation fails', async () => {
       mockReq.params = { id: -1 };
-      jest.spyOn(bookController, 'isBookExists').mockResolvedValue(true);
+      jest.spyOn(memberController, 'isMemberExists').mockResolvedValue(true);
 
-      await bookController.deleteBook(mockReq as FastifyRequest, mockRes as FastifyReply);
+      await memberController.deleteMember(mockReq as FastifyRequest, mockRes as FastifyReply);
 
       expect(jsonError).toHaveBeenCalledWith({
         req: mockReq,
@@ -267,13 +267,13 @@ describe('Book Controller Tests', () => {
       });
     });
 
-    it('should return 404 if the book is not found', async () => {
+    it('should return 404 if the member is not found', async () => {
       mockReq.params = { id: 1 };
 
       jest.spyOn(query, 'getFirst').mockResolvedValue(null);
-      jest.spyOn(bookController, 'isBookExists').mockResolvedValue(false);
+      jest.spyOn(memberController, 'isMemberExists').mockResolvedValue(false);
 
-      await bookController.deleteBook(mockReq as FastifyRequest, mockRes as FastifyReply);
+      await memberController.deleteMember(mockReq as FastifyRequest, mockRes as FastifyReply);
 
       expect(jsonError).toHaveBeenCalledWith({
         req: mockReq,

@@ -1,11 +1,17 @@
 import { PrismaClient } from '@prisma/client';
-import { IBookRequestCreate, IBookRequestUpdate } from './book';
+import { IAdminRequestCreate, IAdminRequestUpdate } from './admin';
 
 const prisma = new PrismaClient();
-const table = prisma.book;
+const table = prisma.admin;
 
 export const listAll = async (skip: number, take: number) => {
   return table.findMany({
+    select: {
+      id: true,
+      email: true,
+      firstname: true,
+      lastname: true
+    },
     where: {
       deletedAt: null,
     },
@@ -14,9 +20,9 @@ export const listAll = async (skip: number, take: number) => {
   });
 };
 
-export const create = async (data: IBookRequestCreate) => table.create({ data });
+export const create = async (data: IAdminRequestCreate) => table.create({ data });
 
-export const update = async (id: number, data: IBookRequestUpdate) => {
+export const update = async (id: number, data: IAdminRequestUpdate) => {
   return table.update({
     where: { id },
     data: {
@@ -26,11 +32,10 @@ export const update = async (id: number, data: IBookRequestUpdate) => {
   });
 };
 
-export const deleteById = async (id: number, modifiedBy: number) => {
+export const deleteById = async (id: number) => {
   return table.update({
     where: { id },
     data: {
-      modifiedBy,
       updatedAt: new Date(),
       deletedAt: new Date(),
     },
@@ -43,6 +48,15 @@ export const getFirst = async (id: number) => {
   return table.findFirst({
     where: {
       id,
+      deletedAt: null,
+    },
+  });
+};
+
+export const getFirstByEmail = async (email: string) => {
+  return table.findFirst({
+    where: {
+      email,
       deletedAt: null,
     },
   });

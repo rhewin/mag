@@ -1,8 +1,8 @@
 import { PrismaClient } from '@prisma/client';
-import { IBookRequestCreate, IBookRequestUpdate } from './book';
+import { IMemberRequestCreate, IMemberRequestUpdate } from './member';
 
 const prisma = new PrismaClient();
-const table = prisma.book;
+const table = prisma.member;
 
 export const listAll = async (skip: number, take: number) => {
   return table.findMany({
@@ -14,9 +14,9 @@ export const listAll = async (skip: number, take: number) => {
   });
 };
 
-export const create = async (data: IBookRequestCreate) => table.create({ data });
+export const create = async (data: IMemberRequestCreate) => table.create({ data });
 
-export const update = async (id: number, data: IBookRequestUpdate) => {
+export const update = async (id: number, data: IMemberRequestUpdate) => {
   return table.update({
     where: { id },
     data: {

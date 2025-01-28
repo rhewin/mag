@@ -14,7 +14,8 @@ const config = {
         warnOnly: true
       }
     }],
-  }
+  },
+  reporters: ["default"]
 };
 
 export default config

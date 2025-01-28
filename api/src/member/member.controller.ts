@@ -1,34 +1,34 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
-import { IBookRequestCreate, IBookRequestUpdate } from './book';
+import { IMemberRequestCreate, IMemberRequestUpdate } from './member';
 import {
   queryListInputValidate,
-  createBookInputValidate,
-  updateBookInputValidate,
+  createMemberInputValidate,
+  updateMemberInputValidate,
   idInputValidate
-} from './book.validator';
-import * as query from './book.query';
-import * as queryDep from './book.dep.query';
+} from './member.validator';
+import * as query from './member.query';
 import { getPagination } from "../utils/util.pagination";
 import { jsonError } from '../utils/util.jsonResponse';
+import { genInternalUniqueId } from '../utils/util.formatter';
 
 
-export const isBookExists = async (id: number): Promise<boolean> => {
+export const isMemberExists = async (id: number): Promise<boolean> => {
   const data = await query.getFirst(id);
   return !!data;
 }
 
-const allUpdateValidation = async (req: FastifyRequest, res: FastifyReply, id: number, data: IBookRequestUpdate) => {
+const allUpdateValidation = async (req: FastifyRequest, res: FastifyReply, id: number, data: IMemberRequestUpdate) => {
   let validate = idInputValidate({ id })
   if (!validate.isSuccess) {
     return jsonError({ req, res, code: 400, message: 'Invalid param id', error: validate.errorDetail })
   }
 
-  validate = updateBookInputValidate(data)
+  validate = updateMemberInputValidate(data)
   if (!validate.isSuccess) {
     return jsonError({ req, res, code: 400, message: 'Invalid request', error: validate.errorDetail })
   }
 
-  if (!await isBookExists(id)) {
+  if (!await isMemberExists(id)) {
     return jsonError({ req, res, code: 404, message: 'Data not found' })
   }
 
@@ -41,14 +41,14 @@ const allDeleteValidation = async (req: FastifyRequest, res: FastifyReply, id: n
     return jsonError({ req, res, code: 400, message: 'Invalid param id', error: validate.errorDetail })
   }
 
-  if (!await isBookExists(id)) {
+  if (!await isMemberExists(id)) {
     return jsonError({ req, res, code: 404, message: 'Data not found' })
   }
 
   return validate
 }
 
-export const listBook = async (req: FastifyRequest, res: FastifyReply) => {
+export const listMember = async (req: FastifyRequest, res: FastifyReply) => {
   let { pageNum, perPage } = req.query as {
     pageNum?: number;
     perPage?: number;
@@ -81,45 +81,29 @@ export const listBook = async (req: FastifyRequest, res: FastifyReply) => {
   }
 };
 
-export const createBook = async (req: FastifyRequest, res: FastifyReply) => {
+export const createMember = async (req: FastifyRequest, res: FastifyReply) => {
   const modifiedBy = req.user.id ?? 0;
-  const data: IBookRequestCreate = req.body as any
+  const data: IMemberRequestCreate = req.body as any
+  const memberId = genInternalUniqueId()
+  const status = "active";
 
-  const validate = createBookInputValidate({ ...data, modifiedBy })
+  const validate = createMemberInputValidate({ ...data, memberId, status, modifiedBy })
   if (!validate.isSuccess) {
     return jsonError({ req, res, code: 400, message: 'Invalid request', error: validate.errorDetail })
   }
 
   try {
     const data = await query.create(validate.data);
-    await queryDep.upsertBookStatus(data.id, data.quantity, 0);
     res.code(201).send(data);
   } catch (error) {
     return jsonError({ req, res, code: 500, message: 'Error creating data', error })
   }
 };
 
-export const updateBookStatus = async (req: FastifyRequest, res: FastifyReply, bookId: number, qty: number) => {
-  const bookStatus = await queryDep.getBookStatusByBookId(bookId)
-  if (bookStatus === null || bookStatus === undefined) {
-    await queryDep.upsertBookStatus(bookId, qty, 0)
-    return;
-  }
-
-  let availableQty = 0;
-  let borrowedQty = 0;
-  borrowedQty = bookStatus.borrowedQty;
-  availableQty = qty - borrowedQty
-  if (availableQty < 0) {
-    return jsonError({ req, res, code: 500, message: 'No book to rent', error: 'No book to rent' })
-  }
-  await queryDep.upsertBookStatus(bookId, availableQty, borrowedQty)
-}
-
-export const updateBook = async (req: FastifyRequest, res: FastifyReply) => {
+export const updateMember = async (req: FastifyRequest, res: FastifyReply) => {
   const modifiedBy = req.user.id ?? 0;
   let { id } = req.params as { id: number }
-  let data: IBookRequestUpdate = req.body as any
+  let data: IMemberRequestUpdate = req.body as any
 
   id = Number(id)
   data = { ...data, modifiedBy }
@@ -130,8 +114,6 @@ export const updateBook = async (req: FastifyRequest, res: FastifyReply) => {
   }
 
   try {
-    await updateBookStatus(req, res, id, validate.data.quantity)
-
     const data = await query.update(id, validate.data);
     res.send(data);
   } catch (error) {
@@ -139,7 +121,7 @@ export const updateBook = async (req: FastifyRequest, res: FastifyReply) => {
   }
 };
 
-export const deleteBook = async (req: FastifyRequest, res: FastifyReply) => {
+export const deleteMember = async (req: FastifyRequest, res: FastifyReply) => {
   const modifiedBy = req.user.id ?? 0;
   let { id } = req.params as { id: number };
   id = Number(id)

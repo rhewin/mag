@@ -9,9 +9,9 @@ export interface IBookRequest {
 export type IBookRequestCreate = IBookRequest;
 export type IBookRequestUpdate = IBookRequest;
 
-export interface IResult {
+export interface IBookResult {
   isSuccess: boolean;
-  msg: string | null;
+  message: string | null;
   data: any;
   errorDetail: any;
 }

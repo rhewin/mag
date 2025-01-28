@@ -19,7 +19,7 @@
     "declaration": true,
     "sourceMap": true,
     "esModuleInterop": true,
-    "moduleResolution": "bundler",
+    "moduleResolution": "node",
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
@@ -55,7 +55,6 @@
     "logs"
   ],
   "include": [
-    "src/**/*",
-    "src/index.ts"
+    "src/**/*"
   ]
 }

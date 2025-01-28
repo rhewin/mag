@@ -1,8 +1,8 @@
 import { PrismaClient } from '@prisma/client';
-import { IBookRequestCreate, IBookRequestUpdate } from './book';
+import { ILendRequestCreate, ILendRequestUpdate } from './lend';
 
 const prisma = new PrismaClient();
-const table = prisma.book;
+const table = prisma.lending;
 
 export const listAll = async (skip: number, take: number) => {
   return table.findMany({
@@ -14,9 +14,9 @@ export const listAll = async (skip: number, take: number) => {
   });
 };
 
-export const create = async (data: IBookRequestCreate) => table.create({ data });
+export const create = async (data: ILendRequestCreate) => table.create({ data });
 
-export const update = async (id: number, data: IBookRequestUpdate) => {
+export const update = async (id: number, data: ILendRequestUpdate) => {
   return table.update({
     where: { id },
     data: {
@@ -43,6 +43,17 @@ export const getFirst = async (id: number) => {
   return table.findFirst({
     where: {
       id,
+      deletedAt: null,
+    },
+  });
+};
+
+export const getRentedBook = async (bookId: number, memberId: number) => {
+  return table.findFirst({
+    where: {
+      bookId,
+      memberId,
+      status: "borrowed",
       deletedAt: null,
     },
   });
