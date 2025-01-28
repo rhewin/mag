@@ -5,6 +5,7 @@ import swagger from '@fastify/swagger';
 import swaggerUI from '@fastify/swagger-ui';
 import middie from '@fastify/middie';
 import rateLimit from '@fastify/rate-limit';
+import cors from "@fastify/cors";
 
 const server = fastify(cfg.LOGGER_OPT);
 
@@ -14,6 +15,7 @@ const server = fastify(cfg.LOGGER_OPT);
     server.register(rateLimit, cfg.RATE_LIMIT_OPT);
     server.register(swagger, cfg.SWAGGER_OPT);
     server.register(swaggerUI, cfg.SWAGGER_UI_OPT);
+    server.register(cors, cfg.CORS_OPT);
 
     server.register(routes.adminRouter);
     server.register(routes.bookRouter);

@@ -21,6 +21,13 @@ const swaggerUIOptions = {
   routePrefix: '/docs',
 };
 
+const corsOptions = {
+  origin: "*",
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,
+}
+
 // rate limit: 100 req/min
 const rateLimitOptions = {
   max: 100,
@@ -47,6 +54,7 @@ export default {
   PORT: Number(process.env.PORT) || 3000,
   SWAGGER_OPT: swaggerOptions,
   SWAGGER_UI_OPT: swaggerUIOptions,
+  CORS_OPT: corsOptions,
   RATE_LIMIT_OPT: rateLimitOptions,
   LOGGER_OPT: loggerOptions,
   JWT_SECRET: process.env.JWT_SECRET ?? '',

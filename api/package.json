@@ -25,6 +25,7 @@
   "license": "ISC",
   "description": "Library management system",
   "dependencies": {
+    "@fastify/cors": "^10.0.2",
     "@fastify/middie": "^9.0.3",
     "@fastify/rate-limit": "^10.2.2",
     "@fastify/swagger": "^9.4.2",
