@@ -14,7 +14,7 @@ import { SidebarRegularItem } from '../components/sidebar/navigation-items';
 
 export const PrimarySidebarPrimaryGroup = ({ ...props }) => {
   return (
-    <NavigationGroup header='general' {...props}>
+    <NavigationGroup header='' {...props}>
       <SidebarRegularItem
         href='#'
         before={<HomeIcon className='w-8 h-8 sm:w-6 sm:h-6' />}

@@ -21,6 +21,7 @@ const server = fastify(cfg.LOGGER_OPT);
     server.register(routes.bookRouter);
     server.register(routes.memberRouter);
     server.register(routes.lendRouter);
+    server.register(routes.reportRouter);
 
     await server.listen({ port: cfg.PORT });
   } catch (err) {

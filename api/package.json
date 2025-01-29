@@ -18,7 +18,8 @@
     "prisma:studio": "prisma studio"
   },
   "prisma": {
-    "seed": "tsx ./prisma/seed.ts"
+    "seed": "tsx ./prisma/seed.ts",
+    "seed:sample": "tsx ./prisma/seedSample.ts"
   },
   "keywords": [],
   "author": "Rheza Sindhuwinata <rheza.s@gmail.com>",
@@ -44,6 +45,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.18.0",
+    "@faker-js/faker": "^9.4.0",
     "@types/jest": "^29.5.14",
     "@types/jsonwebtoken": "^9.0.8",
     "@types/supertest": "^6.0.2",

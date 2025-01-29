@@ -10,32 +10,13 @@ import { InputWithIconsNormalToLarge } from '../components/input/input-with-icon
 
 export const TopbarForSidebarContentLayout = () => {
   return (
-    <div className='lg:bg-blinkNeutral50 lg:dark:bg-blinkNeutral800'>
+    <div className='bg-blinkNeutral50'>
       <nav
         aria-label='Main Navigation'
         className='h-auto lg:h-16 px-6 flex items-center justify-between absolute top-3 lg:top-0 right-0 lg:right-0 left-12 lg:left-0 lg:relative'
       >
         <div className='text-2xl blink-text-primary italic font-blink-title'>
-          <a href='#'>Page Name</a>
-        </div>
-        <div className='gap-3 hidden lg:flex'>
-          <InputWithIconsNormalToLarge
-            placeholder='Search...'
-            before={<SearchIcon className='w-6 h-6 lg:w-4 lg:h-4' />}
-          />
-
-          <Button
-            appearance='secondary'
-            after={<DownloadIcon className='w-6 h-6 lg:w-4 lg:h-4' />}
-          >
-            Download
-          </Button>
-          <Button
-            appearance='primary'
-            after={<PlusIcon className='w-6 h-6 lg:w-4 lg:h-4' />}
-          >
-            Create
-          </Button>
+          <a href='#'>Dashboard Analytics Library</a>
         </div>
         <div className='block lg:hidden'>
           <Drawer
