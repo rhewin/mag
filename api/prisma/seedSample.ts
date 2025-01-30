@@ -52,8 +52,8 @@ async function main() {
   await prisma.bookStatus.createMany({ data: bookStatusData });
 
   // Generate sample Lending data
-  for (let i = 1; i <= 50; i++) {
-    const borrowedDate = faker.date.recent({ days: 90 });
+  for (let i = 1; i <= 100; i++) {
+    const borrowedDate = faker.date.recent({ days: 150 });
     const dueDate = new Date(borrowedDate);
     dueDate.setDate(dueDate.getDate() + 7); // Adding 7 days to borrowedDate
 

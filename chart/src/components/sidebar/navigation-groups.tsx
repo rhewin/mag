@@ -1,10 +1,5 @@
-import React, { ReactNode } from 'react';
-
-import { ChevronDownIcon } from '../../icons/chevron-down-icon';
-import { ChevronRightIcon } from '../../icons/chevron-right-icon';
-import { SidebarRegularItem } from '../../components/sidebar/navigation-items';
+import { ReactNode } from 'react';
 import { merge } from '../../utils/merge-classnames';
-import * as CollapsiblePrimitives from '@radix-ui/react-collapsible';
 
 type NavigationGroupProps = {
   left?: ReactNode;
@@ -48,95 +43,5 @@ export const NavigationGroup = ({
       ) : null}
       {children}
     </div>
-  );
-};
-
-type ItemWithSubNavigationProps = {
-  text: string;
-  children: ReactNode;
-  initialOpen?: boolean;
-};
-
-export const CollapsibleSubgroupLeft = ({
-  text,
-  children,
-  initialOpen = false,
-}: ItemWithSubNavigationProps) => {
-  const [open, setOpen] = React.useState(initialOpen);
-
-  return (
-    <CollapsiblePrimitives.Root
-      className='w-full group-data-[sidebar-open=false]:hidden'
-      open={open}
-      onOpenChange={setOpen}
-    >
-      <CollapsiblePrimitives.Trigger asChild>
-        <SidebarRegularItem
-          className='w-full'
-          before={
-            open ? (
-              <ChevronDownIcon className='w-8 h-8 sm:w-6 sm:h-6' />
-            ) : (
-              <ChevronRightIcon className='w-8 h-8 sm:w-6 sm:h-6' />
-            )
-          }
-          role='button'
-          aria-expanded={open}
-          aria-controls='collapsible-content-left'
-        >
-          {text}
-        </SidebarRegularItem>
-      </CollapsiblePrimitives.Trigger>
-
-      <CollapsiblePrimitives.Content
-        id='collapsible-content-left'
-        className='py-1 flex flex-col gap-1'
-      >
-        {children}
-      </CollapsiblePrimitives.Content>
-    </CollapsiblePrimitives.Root>
-  );
-};
-
-export const CollapsibleSubgroupRight = ({
-  text,
-  icon,
-  children,
-  initialOpen = false,
-}: ItemWithSubNavigationProps & { icon?: ReactNode }) => {
-  const [open, setOpen] = React.useState(initialOpen);
-
-  return (
-    <CollapsiblePrimitives.Root
-      className='w-full'
-      open={open}
-      onOpenChange={setOpen}
-    >
-      <CollapsiblePrimitives.Trigger asChild>
-        <SidebarRegularItem
-          className='w-full'
-          before={icon}
-          after={
-            open ? (
-              <ChevronDownIcon className='w-8 h-8 sm:w-6 sm:h-6' />
-            ) : (
-              <ChevronRightIcon className='w-8 h-8 sm:w-6 sm:h-6' />
-            )
-          }
-          role='button'
-          aria-expanded={open}
-          aria-controls='collapsible-content-right'
-        >
-          {text}
-        </SidebarRegularItem>
-      </CollapsiblePrimitives.Trigger>
-
-      <CollapsiblePrimitives.Content
-        id='collapsible-content-right'
-        className='py-1 flex flex-col gap-1'
-      >
-        {children}
-      </CollapsiblePrimitives.Content>
-    </CollapsiblePrimitives.Root>
   );
 };
