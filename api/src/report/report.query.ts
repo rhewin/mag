@@ -16,7 +16,7 @@ export const mostBorrowedBooks = async () => {
       lending: {
         _count: 'desc',
       },
-    },
+    }
   });
 };
 

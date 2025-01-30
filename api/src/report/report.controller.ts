@@ -5,7 +5,8 @@ import { jsonError } from '../utils/util.jsonResponse';
 export const mostBorrowedBooks = async (req: FastifyRequest, res: FastifyReply) => {
   try {
     const data = await query.mostBorrowedBooks();
-    res.send(data);
+    const filteredData = data.filter(item => item._count.lending > 0);
+    res.send(filteredData);
   } catch (error) {
     return jsonError({ req, res, code: 500 })
   }
