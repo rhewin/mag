@@ -80,6 +80,6 @@ But because the limitation of time and it wasn't requested in the requirements e
 
 
 ## Extras
-[v] Use jwt for login process
-[v] Hash password using Argon2 which is modern hashing algoritm
-[v] Rate limit for all endpoint
+[v] Use jwt for login process<br/>
+[v] Hash password using Argon2 which is modern hashing algoritm<br/>
+[v] Rate limit for all endpoint<br/>
