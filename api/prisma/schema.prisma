@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,101 +8,95 @@ datasource db {
 }
 
 model Admin {
-  id         Int      @id @default(autoincrement())
-  uuid       String   @unique @default(uuid())
-  adminId    String   @unique
-  email      String   @unique
-  password   String
-  firstname  String
-  lastname   String?
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime?
-  deletedAt  DateTime?
+  id        Int       @id @default(autoincrement())
+  uuid      String    @unique @default(uuid())
+  adminId   String    @unique
+  email     String    @unique
+  password  String
+  firstname String
+  lastname  String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime?
+  deletedAt DateTime?
 
-  @@index([email], name: "idx_admin_email")
-  @@index([adminId], name: "idx_admin_adminId")
-  @@index([firstname], name: "idx_admin_firstname")
-  @@index([lastname], name: "idx_admin_lastname")
+  @@index([email], map: "idx_admin_email")
+  @@index([adminId], map: "idx_admin_adminId")
+  @@index([firstname], map: "idx_admin_firstname")
+  @@index([lastname], map: "idx_admin_lastname")
 }
 
 model Member {
-  id         Int      @id @default(autoincrement())
-  memberId   String   @unique
+  id         Int       @id @default(autoincrement())
+  memberId   String    @unique
   firstname  String
   lastname   String?
   email      String
   phone      String?
-  status     String   @default("active")
-  joinedDate DateTime @default(now())
-  createdBy  Int
-  createdAt  DateTime @default(now())
+  status     String    @default("active")
+  modifiedBy Int
+  createdAt  DateTime  @default(now())
   updatedAt  DateTime?
   deletedAt  DateTime?
+  lendings   Lending[]
 
-  lendings Lending[]
-
-  @@index([email], name: "idx_member_email")
-  @@index([memberId], name: "idx_member_memberId")
-  @@index([firstname], name: "idx_member_firstname")
-  @@index([lastname], name: "idx_member_lastname")
-  @@index([phone], name: "idx_member_phone")
+  @@index([email], map: "idx_member_email")
+  @@index([memberId], map: "idx_member_memberId")
+  @@index([firstname], map: "idx_member_firstname")
+  @@index([lastname], map: "idx_member_lastname")
+  @@index([phone], map: "idx_member_phone")
 }
 
 model Book {
-  id         Int      @id @default(autoincrement())
+  id         Int         @id @default(autoincrement())
   title      String
   author     String
-  isbn       String   @unique
+  isbn       String      @unique
   quantity   Int
   categoryId Int
-  createdBy  Int
-  createdAt  DateTime @default(now())
+  modifiedBy Int
+  createdAt  DateTime    @default(now())
   updatedAt  DateTime?
   deletedAt  DateTime?
+  category   Category    @relation("BookCategory", fields: [categoryId], references: [id])
+  bookStatus BookStatus?
+  lending    Lending[]
 
-  category        Category   @relation("BookCategory", fields: [categoryId], references: [id])
-  lending         Lending[]
-  bookStatus      BookStatus? @relation
-
-  @@index([title], name: "idx_book_title")
-  @@index([author], name: "idx_book_author")
-  @@index([isbn], name: "idx_book_isbn")
-  @@index([categoryId], name: "idx_book_categoryId")
+  @@index([title], map: "idx_book_title")
+  @@index([author], map: "idx_book_author")
+  @@index([isbn], map: "idx_book_isbn")
+  @@index([categoryId], map: "idx_book_categoryId")
 }
 
 model Category {
-  id   Int    @id @default(autoincrement())
-  name String
-
+  id    Int    @id @default(autoincrement())
+  name  String
   books Book[] @relation("BookCategory")
 
-  @@index([name], name: "idx_name")
+  @@index([name], map: "idx_name")
 }
 
 model Lending {
-  id           Int      @id @default(autoincrement())
+  id           Int       @id @default(autoincrement())
   bookId       Int
   memberId     Int
-  borrowedDate DateTime @default(now())
+  borrowedDate DateTime  @default(now())
   dueDate      DateTime
   returnDate   DateTime?
-  status       String   @default("borrowed")
-  createdBy    Int
-  createdAt    DateTime @default(now())
+  status       String    @default("borrowed")
+  modifiedBy   Int
+  createdAt    DateTime  @default(now())
   updatedAt    DateTime?
   deletedAt    DateTime?
+  book         Book      @relation(fields: [bookId], references: [id])
+  member       Member    @relation(fields: [memberId], references: [id])
 
-  book            Book    @relation(fields: [bookId], references: [id])
-  member          Member  @relation(fields: [memberId], references: [id])
-
-  @@index([bookId, memberId], name: "idx_lending_book_member")
+  @@index([bookId, memberId], map: "idx_lending_book_member")
 }
 
 model BookStatus {
-  id            Int     @id @default(autoincrement())
-  bookId        Int     @unique
-  availableQty  Int
-  borrowedQty   Int
-
-  book Book @relation(fields: [bookId], references: [id])
+  id           Int  @id @default(autoincrement())
+  bookId       Int  @unique
+  availableQty Int
+  borrowedQty  Int
+  book         Book @relation(fields: [bookId], references: [id])
 }

@@ -15,13 +15,15 @@ services:
       - db
     networks:
       - app-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   db:
     image: bitnami/postgresql:latest
     container_name: mag-db
     environment:
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=kJ2nWndf29f!@xs
+      - POSTGRES_PASSWORD=kJ2nWndf29fxs
       - POSTGRES_DB=dbmag
     ports:
       - "5432:5432"
@@ -35,7 +37,7 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: mag-prisma
-    command: ["npx", "prisma", "migrate", "deploy"]
+    command: sh -c "npx prisma migrate deploy && npx prisma db seed"
     env_file:
       - .env
     depends_on:

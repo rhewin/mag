@@ -1,4 +1,6 @@
-FROM node:22.13.1-alpine
+FROM node:22.13.1-alpine3.20
+
+RUN apk add --no-cache openssl
 
 WORKDIR /app
 
@@ -7,7 +9,7 @@ RUN npm install --frozen-lockfile
 
 COPY . .
 
-RUN npm run build
+RUN npm run build && npx prisma generate
 
 ENV NODE_ENV=production
 
