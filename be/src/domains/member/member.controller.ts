@@ -40,9 +40,7 @@ export const deleteById = async (ctx: any) => {
   let { id } = ctx.params as { id: number };
 
   const modifiedBy = "0";
-  const [data, err] = await attempt(() =>
-    memberQuery.softDeleteById(Number(id), modifiedBy)
-  );
+  const [data, err] = await attempt(() => memberQuery.softDeleteById(Number(id), modifiedBy) );
   return err ? jsonError() : jsonOk(data, "success deleted");
 };
 
