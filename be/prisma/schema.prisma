@@ -1,0 +1,54 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id            Int       @id @default(autoincrement())
+  uuid          String    @unique               @db.VarChar(50) @default(uuid())
+  internalId    String    @unique               @db.VarChar(10) @map("internal_id")
+  email         String    @unique               @db.VarChar(255)
+  password      String                          @db.VarChar(255)
+  fullname      String                          @db.VarChar(100)
+  nickname      String                          @db.VarChar(50)
+  createdAt     DateTime  @default(now())       @map("created_at")
+  updatedAt     DateTime?                       @map("updated_at")
+  deletedAt     DateTime?                       @map("deleted_at")
+
+  @@map("admins")
+
+  @@index([fullname], map: "idx_admin_fullname")
+  @@index([nickname], map: "idx_admin_nickname")
+}
+
+model Member {
+  id         Int          @id @default(autoincrement())
+  internalId String       @unique               @db.VarChar(10) @map("internal_id")
+  fullname   String                             @db.VarChar(100)
+  nickname   String                             @db.VarChar(50)
+  email      String?      @unique               @db.VarChar(255)
+  phone      String?      @unique               @db.VarChar(20)
+  status     String       @default("onreview")  @db.VarChar(20)
+  modifiedBy String                             @map("modified_by") @db.VarChar(255)
+  createdAt  DateTime     @default(now())       @map("created_at")
+  updatedAt  DateTime?                          @map("updated_at")
+  deletedAt  DateTime?                          @map("deleted_at")
+
+  @@map("members")
+
+  @@index([fullname], map: "idx_member_fullname")
+  @@index([nickname], map: "idx_member_nickname")
+}
+
+model Category {
+  id    Int             @id @default(autoincrement())
+  name  String          @db.VarChar(255)
+
+  @@map("categories")
+
+  @@index([name], map: "idx_category_name")
+}

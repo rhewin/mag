@@ -1,0 +1,32 @@
+services:
+  db:
+    image: bitnami/postgresql:latest
+    container_name: cad-db
+    env_file:
+      - .env
+    volumes:
+      - db-data:/bitnami/postgresql # Persist database data
+    ports:
+      - "5432:5432" # Expose PostgreSQL port
+    networks:
+      - app-network
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cad-api
+    env_file:
+      - .env
+    ports:
+      - "3000:3000" # Expose API port
+    depends_on:
+      - db # Ensure the database starts first
+    networks:
+      - app-network
+
+volumes:
+  db-data: # Volume to persist database data
+
+networks:
+  app-network: # Network to connect the API and database containers
