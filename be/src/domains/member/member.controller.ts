@@ -30,7 +30,8 @@ export const update = async (ctx: any) => {
   let req = ctx.body as IReqUpdateMember;
 
   const modifiedBy = "0";
-  const [data, err] = await attempt(() => memberQuery.update(Number(id), { ...req, modifiedBy })
+  const [data, err] = await attempt(() =>
+    memberQuery.update(Number(id), { ...req, modifiedBy })
   );
   return err ? jsonError() : jsonOk(data);
 };
