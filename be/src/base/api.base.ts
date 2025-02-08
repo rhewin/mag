@@ -1,26 +1,52 @@
-const headers = { "Content-Type": "application/json" };
+import type { IErrorMap } from './base'
+import { log } from '@/utils/helper.util'
 
-const errCodeMessage: Record<number, string> = {
-  400: "Bad request",
-  401: "Unauthorized",
-  404: "Not found",
-  500: "Internal server error",
-};
+const headers = { 'Content-Type': 'application/json' }
 
-const jsonOk = (data: any, message: string = "success", status = 200) =>
+const errorMap: Record<string, IErrorMap> = {
+  VALIDATION: { status: 400, message: 'Validation failed' },
+  NOT_FOUND: { status: 404, message: 'Route not found' },
+  UNAUTHORIZED: { status: 401, message: 'Unauthorized access' },
+  FORBIDDEN: { status: 403, message: 'Forbidden' },
+  TOO_MANY_REQUESTS: { status: 429, message: 'Too many requests' },
+  INTERNAL: { status: 500, message: 'Internal server error' },
+  BAD_REQUEST: { status: 400, message: 'Bad request' },
+}
+
+const jsonOk = (data: any, message: string = 'success', status = 200) =>
   new Response(JSON.stringify({ success: true, message, data }), {
     status,
     headers,
-  });
+  })
 
-const jsonError = (
-  message: string = errCodeMessage[500],
-  status: number = 500,
-  data?: any
-) =>
-  new Response(JSON.stringify({ success: false, message, data }), {
-    status,
-    headers,
-  });
+const jsonError = (code?: string, data?: any, customMessage?: string) => {
+  code = code ?? 'INTERNAL'
+  let { status, message } = errorMap[code] || {
+    status: 500,
+    message: 'Unknown error',
+  }
 
-export { jsonOk, jsonError };
+  log.error(data)
+
+  if (code == 'VALIDATION') {
+    message = data.map((err: any) => err.schema.error.message).join(', ')
+    data = null
+  } else {
+    message = customMessage && customMessage != '' ? customMessage : message
+    data = data.message ?? 'unknown error'
+  }
+
+  return new Response(
+    JSON.stringify({
+      success: false,
+      message,
+      data,
+    }),
+    {
+      status,
+      headers,
+    }
+  )
+}
+
+export { jsonOk, jsonError }

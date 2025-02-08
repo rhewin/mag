@@ -7,7 +7,7 @@ services:
     volumes:
       - db-data:/bitnami/postgresql # Persist database data
     ports:
-      - "5432:5432" # Expose PostgreSQL port
+      - '5432:5432' # Expose PostgreSQL port
     networks:
       - app-network
 
@@ -19,7 +19,7 @@ services:
     env_file:
       - .env
     ports:
-      - "3000:3000" # Expose API port
+      - '3000:3000' # Expose API port
     depends_on:
       - db # Ensure the database starts first
     networks:

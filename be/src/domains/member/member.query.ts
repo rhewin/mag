@@ -1,4 +1,4 @@
-import { prisma, BaseQuery } from "@/base/query.base";
+import { prisma, BaseQuery } from '@/base/query.base'
 
 export class MemberQuery extends BaseQuery {
   constructor() {
@@ -10,9 +10,9 @@ export class MemberQuery extends BaseQuery {
       phone: true,
       status: true,
       createdAt: true,
-    };
+    }
 
-    super(prisma.member, visibleFields);
+    super(prisma.member, visibleFields)
   }
 
   getByInternalId = async (internalId: string) =>
@@ -23,23 +23,23 @@ export class MemberQuery extends BaseQuery {
       where: {
         internalId,
       },
-    });
+    })
 
   genInternalId = async (): Promise<string> => {
-    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    let pin: string;
-    let exists: boolean;
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+    let pin: string
+    let exists: boolean
 
     do {
       pin = Array.from(
         { length: 9 },
         () => chars[Math.floor(Math.random() * chars.length)]
-      ).join("");
-      exists = !!(await this.getByInternalId(`M${pin}`));
-    } while (exists);
+      ).join('')
+      exists = !!(await this.getByInternalId(`M${pin}`))
+    } while (exists)
 
-    return `M${pin}`;
-  };
+    return `M${pin}`
+  }
 }
 
-export const memberQuery = new MemberQuery();
+export const memberQuery = new MemberQuery()

@@ -1,22 +1,22 @@
-import { PrismaClient } from "@prisma/client";
-import cfg from "@/config";
+import { PrismaClient } from '@prisma/client'
+import cfg from '@/config'
 
-export const prisma = new PrismaClient(cfg.PRISMA_OPT);
+export const prisma = new PrismaClient(cfg.PRISMA_OPT)
 
 export class BaseQuery {
-  protected readonly table;
-  protected readonly visibleFields;
+  protected readonly table
+  protected readonly visibleFields
 
   constructor(tableName: any, visibleFields: any) {
-    this.table = tableName;
-    this.visibleFields = visibleFields;
+    this.table = tableName
+    this.visibleFields = visibleFields
   }
 
-  selectField = (fields: any) => (!fields ? {} : { select: fields });
+  selectField = (fields: any) => (!fields ? {} : { select: fields })
 
-  count = async () => this.table.count({ where: { deletedAt: null } });
+  count = async () => this.table.count({ where: { deletedAt: null } })
 
-  create = async (data: any) => this.table.create({ data });
+  create = async (data: any) => this.table.create({ data })
 
   getById = async (id: number) =>
     this.table.findFirst({
@@ -25,7 +25,7 @@ export class BaseQuery {
         id,
         deletedAt: null,
       },
-    });
+    })
 
   getAll = async (skip: number, take: number) =>
     this.table.findMany({
@@ -35,7 +35,7 @@ export class BaseQuery {
       },
       skip,
       take,
-    });
+    })
 
   update = async (id: number, data: any) =>
     this.table.update({
@@ -44,10 +44,10 @@ export class BaseQuery {
         ...data,
         updatedAt: new Date(),
       },
-    });
+    })
 
   softDeleteById = async (id: number, modifiedBy: string) => {
-    const dateNow = new Date();
+    const dateNow = new Date()
     return this.table.update({
       where: { id },
       data: {
@@ -55,6 +55,6 @@ export class BaseQuery {
         updatedAt: dateNow,
         deletedAt: dateNow,
       },
-    });
-  };
+    })
+  }
 }
