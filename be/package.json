@@ -13,14 +13,14 @@
     "prepare": "husky"
   },
   "prisma": {
-    "seed": "tsx ./prisma/seed.ts"
+    "seed": "bun ./prisma/seed.ts"
   },
   "lint-staged": {
     "**/*.{js,ts,json,md}": "prettier --write"
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",
-    "@types/bun": "latest",
+    "@types/bun": "^1.2.2",
     "@types/eslint-config-prettier": "^6.11.3",
     "@typescript-eslint/eslint-plugin": "^8.23.0",
     "@typescript-eslint/parser": "^8.23.0",
@@ -39,6 +39,7 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
+    "@elysiajs/jwt": "^1.2.0",
     "@elysiajs/swagger": "^1.2.0",
     "@prisma/client": "^6.3.0",
     "elysia": "^1.2.10",

@@ -1,19 +1,32 @@
 import { prisma, BaseQuery } from '@/base/query.base'
 import { generatePIN } from '@/utils/helper.util'
 
-export class MemberQuery extends BaseQuery {
+export class AdminQuery extends BaseQuery {
   constructor() {
     const visibleFields = {
+      uuid: true,
       internalId: true,
+      email: true,
       fullname: true,
       nickname: true,
-      email: true,
-      phone: true,
-      status: true,
       createdAt: true,
     }
 
-    super(prisma.member, visibleFields)
+    super(prisma.admin, visibleFields)
+  }
+
+  getPasswordByEmail = async (email: string) => {
+    return this.table.findFirst({
+      select: {
+        uuid: true,
+        internalId: true,
+        password: true,
+      },
+      where: {
+        email,
+        deletedAt: null,
+      },
+    })
   }
 
   getByInternalId = async (internalId: string) =>
@@ -29,13 +42,14 @@ export class MemberQuery extends BaseQuery {
   generateInternalId = async (): Promise<string> => {
     let pin: string
     let exists: boolean
+
     do {
       pin = generatePIN()
-      exists = !!(await this.getByInternalId(`M${pin}`))
+      exists = !!(await this.getByInternalId(`A${pin}`))
     } while (exists)
 
-    return `M${pin}`
+    return `A${pin}`
   }
 }
 
-export const memberQuery = new MemberQuery()
+export const adminQuery = new AdminQuery()

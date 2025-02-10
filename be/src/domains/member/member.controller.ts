@@ -19,7 +19,7 @@ const create = async (ctx: any) => {
   const req = ctx.body as IReqCreateMember
 
   const modifiedBy = '0'
-  const internalId = await memberQuery.genInternalId()
+  const internalId = await memberQuery.generateInternalId()
   const [data, err] = await attempt(() =>
     memberQuery.create({ ...req, internalId, modifiedBy })
   )
@@ -44,7 +44,7 @@ export const deleteById = async (ctx: any) => {
   const [data, err] = await attempt(() =>
     memberQuery.softDeleteById(Number(id), modifiedBy)
   )
-  return err ? jsonError() : jsonOk(data, 'success deleted')
+  return err ? jsonError() : jsonOk(data)
 }
 
 export default {

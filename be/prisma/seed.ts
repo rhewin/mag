@@ -1,8 +1,26 @@
 import { PrismaClient } from '@prisma/client'
+import { generateUUID7, generatePIN } from '@/utils/helper.util'
+import { hashPassword } from '@/utils/auth.util'
 
 const prisma = new PrismaClient()
 
 async function main() {
+  await prisma.admin.createMany({
+    data: [
+      {
+        uuid: generateUUID7(),
+        internalId: `A${generatePIN()}`,
+        email: 'superadmin@abc.com',
+        password: await hashPassword('Test1234'),
+        fullname: 'Super Admin',
+        nickname: 'Superadmin',
+        modifiedBy: '0000000000',
+      },
+    ],
+  })
+
+  console.log('Seeded admins')
+
   await prisma.category.createMany({
     data: [
       { name: 'Lainnya' },
@@ -17,7 +35,7 @@ async function main() {
     ],
   })
 
-  console.log('Seeded book categories')
+  console.log('Seeded categories')
 }
 
 main()

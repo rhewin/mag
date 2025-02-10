@@ -16,7 +16,8 @@ export class BaseQuery {
 
   count = async () => this.table.count({ where: { deletedAt: null } })
 
-  create = async (data: any) => this.table.create({ data })
+  create = async (data: any) =>
+    this.table.create({ data, ...this.selectField(this.visibleFields) })
 
   getById = async (id: number) =>
     this.table.findFirst({

@@ -1,5 +1,10 @@
 const isProduction = process.env.NODE_ENV === 'production'
 
+const JWT_OPT = {
+  name: 'jwt',
+  secret: process.env.JWT_SECRET ?? 'bXlqd3RzZWNyZXQ=',
+}
+
 const LOGGER_OPT = {
   level: isProduction ? 'error' : 'info',
   transport: {
@@ -27,9 +32,11 @@ const SWAGGER_OPT = {
 }
 
 export default {
+  CHARS_PIN: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
+  JWT_OPT,
   LOGGER_OPT,
   PRISMA_OPT,
   SWAGGER_OPT,
   REGEX_FORMAT_PHONE: '^\\+?[1-9]\\d{1,14}$',
-  PORT: Number(process.env.PORT) || 3000,
+  PORT: Number(process.env.APP_PORT) || 3000,
 }

@@ -13,7 +13,15 @@ const attempt = async <T>(
   }
 }
 
+const generatePIN = (length: number = 9) =>
+  Array.from(
+    { length },
+    () => cfg.CHARS_PIN[Math.floor(Math.random() * cfg.CHARS_PIN.length)]
+  ).join('')
+
 const log = pino(cfg.LOGGER_OPT)
+
+const generateUUID7 = () => globalThis.Bun.randomUUIDv7()
 
 const paginate = (
   pageNum: number | undefined,
@@ -27,41 +35,54 @@ const paginate = (
   return [skip, take]
 }
 
-const toSnakeCase = (obj: any): any => {
+const toSnakeCase = (str: string) =>
+  str.replace(/([A-Z])/g, '_$1').toLowerCase()
+
+const transformKeysToSnakeCase = (obj: any): any => {
   if (Array.isArray(obj)) {
-    return obj.map(toSnakeCase)
+    return obj.map(transformKeysToSnakeCase)
   }
 
   if (obj && typeof obj === 'object') {
     return Object.keys(obj).reduce(
       (acc, key) => ({
         ...acc,
-        [key.replace(/([A-Z])/g, '_$1').toLowerCase()]: toSnakeCase(obj[key]),
+        [toSnakeCase(key)]: transformKeysToSnakeCase(obj[key]),
       }),
       {} as Record<string, any>
     )
   }
-
   return obj
 }
 
-const toCamelCase = (obj: any): any => {
+const toCamelCase = (str: string) =>
+  str.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase())
+
+const transformKeysToCamelCase = (obj: any): any => {
   if (Array.isArray(obj)) {
-    return obj.map(toCamelCase)
+    return obj.map(transformKeysToCamelCase)
   }
 
   if (obj && typeof obj === 'object') {
     return Object.keys(obj).reduce(
       (acc, key) => ({
         ...acc,
-        [key.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase())]:
-          toCamelCase(obj[key]),
+        [toCamelCase(key)]: transformKeysToCamelCase(obj[key]),
       }),
       {} as Record<string, any>
     )
   }
-
   return obj
 }
 
-export { attempt, log, paginate, toSnakeCase, toCamelCase }
+export {
+  attempt,
+  generatePIN,
+  generateUUID7,
+  log,
+  paginate,
+  toSnakeCase,
+  toCamelCase,
+  transformKeysToSnakeCase,
+  transformKeysToCamelCase,
+}

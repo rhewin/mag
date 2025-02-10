@@ -1,5 +1,5 @@
 import type { IErrorMap } from './base'
-import { log } from '@/utils/helper.util'
+import { log, transformKeysToSnakeCase } from '@/utils/helper.util'
 
 const headers = { 'Content-Type': 'application/json' }
 
@@ -14,10 +14,13 @@ const errorMap: Record<string, IErrorMap> = {
 }
 
 const jsonOk = (data: any, message: string = 'success', status = 200) =>
-  new Response(JSON.stringify({ success: true, message, data }), {
-    status,
-    headers,
-  })
+  new Response(
+    JSON.stringify(transformKeysToSnakeCase({ success: true, message, data })),
+    {
+      status,
+      headers,
+    }
+  )
 
 const jsonError = (code?: string, data?: any, customMessage?: string) => {
   code = code ?? 'INTERNAL'
@@ -26,22 +29,24 @@ const jsonError = (code?: string, data?: any, customMessage?: string) => {
     message: 'Unknown error',
   }
 
-  log.error(data)
+  log.error(data, message || customMessage)
 
   if (code == 'VALIDATION') {
     message = data.map((err: any) => err.schema.error.message).join(', ')
     data = null
   } else {
     message = customMessage && customMessage != '' ? customMessage : message
-    data = data.message ?? 'unknown error'
+    data = data instanceof Error && data.message ? data.message : null
   }
 
   return new Response(
-    JSON.stringify({
-      success: false,
-      message,
-      data,
-    }),
+    JSON.stringify(
+      transformKeysToSnakeCase({
+        success: false,
+        message,
+        data,
+      })
+    ),
     {
       status,
       headers,

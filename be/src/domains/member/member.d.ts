@@ -10,4 +10,10 @@ export interface IReqCreateMember {
   phone?: string
 }
 
-export type IReqUpdateMember = IReqCreateMember
+export interface IReqUpdateMember {
+  fullname?: string
+  nickname?: string
+  email?: string
+  phone?: string
+  status?: string
+}

@@ -1,13 +1,17 @@
 import ctrl from './member.controller'
 import { jsonError } from '@/base/api.base'
+import { authMiddleware } from '@/middlewares/auth.mid'
 import {
   createMemberValidation,
   updateMemberValidation,
 } from './member.validator'
 
+const prefix = '/v1/members'
+
 export default (app: any) =>
-  app.group('/v1/members', (group: any) =>
+  app.group(prefix, (group: any) =>
     group
+      .guard({ beforeHandle: authMiddleware })
       .get('/', (ctx: any) => ctrl.list(ctx))
       .post('/', (ctx: any) => ctrl.create(ctx), createMemberValidation)
       .put('/:id', (ctx: any) => ctrl.update(ctx), updateMemberValidation)
