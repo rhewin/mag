@@ -27,6 +27,24 @@ const PRISMA_OPT = {
   errorFormat: 'pretty' as 'pretty' | 'colorless' | 'minimal',
 }
 
+const RATELIMIT_GLOBAL_OPT = {
+  max: 100, // 100 requests
+  timeWindow: 60 * 1000, // per 60 seconds
+  message: 'Too many requests. Please try again later.',
+}
+
+const RATELIMIT_LOGIN_OPT = {
+  max: 5, // 5 requests
+  timeWindow: 60 * 1000, // per 60 seconds
+  message: 'Too many requests. Please try again later.',
+}
+
+const RATELIMIT_GUARD_OPT = {
+  max: 10, // 10 requests
+  timeWindow: 60 * 1000, // per 60 seconds
+  message: 'Too many requests. Please try again later.',
+}
+
 const SWAGGER_OPT = {
   documentation: {
     info: {
@@ -50,11 +68,22 @@ export default {
     memoryCost: 4,
     timeCost: 3,
   },
+  PAGINATION: {
+    DEFAULT_PER_PAGE: 10,
+  },
+  RATELIMIT_GLOBAL_OPT,
+  RATELIMIT_LOGIN_OPT,
+  RATELIMIT_GUARD_OPT,
   VALIDATION: {
     MIN_NAME: 3,
     MAX_NAME: 50,
+    MIN_PASSWORD: 8,
+    MAX_PASSWORD: 32,
     MIN_PHONE: 10,
     MAX_PHONE: 15,
     REGEX_FORMAT_PHONE: '^\\+?[1-9]\\d{1,14}$',
+    REGEX_FORMAT_MEDIUM_PASSWORD: '^(?=.*[a-z])(?=.*\\d).{8,}$',
+    REGEX_FORMAT_STRONG_PASSWORD:
+      '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$',
   },
 }

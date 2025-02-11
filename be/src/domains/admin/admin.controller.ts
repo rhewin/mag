@@ -50,7 +50,7 @@ const create = async (ctx: any) => {
     password: await hashPassword(req.password),
     modifiedBy: ctx.user.internalId,
   }
-  const [data, err] = await attempt(() => adminQuery.create({ inputted }))
+  const [data, err] = await attempt(() => adminQuery.create(inputted))
   return err ? jsonError() : jsonOk(data)
 }
 

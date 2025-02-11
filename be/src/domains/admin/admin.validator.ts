@@ -6,12 +6,19 @@ const AdminStatus = {
   inactive: 'inactive',
 }
 
+export const loginValidation = {
+  body: t.Object({
+    email: validator.emailRule(),
+    password: validator.strongPasswordRule(),
+  }),
+}
+
 export const createAdminValidation = {
   body: t.Object({
     fullname: validator.fullnameRule(),
     nickname: validator.nicknameRule(),
     email: validator.emailRule(),
-    password: t.String(),
+    password: validator.strongPasswordRule(),
   }),
 }
 

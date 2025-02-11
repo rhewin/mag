@@ -33,7 +33,7 @@ const paginate = (
   perPage: number | undefined
 ): any => {
   pageNum = pageNum ? Number(pageNum) : 1
-  perPage = perPage ? Number(perPage) : 10
+  perPage = perPage ? Number(perPage) : cfg.PAGINATION.DEFAULT_PER_PAGE
 
   const skip = (pageNum - 1) * perPage
   const take = perPage
@@ -46,6 +46,10 @@ const toSnakeCase = (str: string) =>
 const transformKeysToSnakeCase = (obj: any): any => {
   if (Array.isArray(obj)) {
     return obj.map(transformKeysToSnakeCase)
+  }
+
+  if (obj instanceof Date) {
+    return obj.toISOString()
   }
 
   if (obj && typeof obj === 'object') {
@@ -66,6 +70,10 @@ const toCamelCase = (str: string) =>
 const transformKeysToCamelCase = (obj: any): any => {
   if (Array.isArray(obj)) {
     return obj.map(transformKeysToCamelCase)
+  }
+
+  if (obj instanceof Date) {
+    return obj.toISOString()
   }
 
   if (obj && typeof obj === 'object') {

@@ -1,4 +1,5 @@
 import { Elysia } from 'elysia'
+import { rateLimit } from 'elysia-rate-limit'
 import { cors } from '@elysiajs/cors'
 import { jwt } from '@elysiajs/jwt'
 import { swagger } from '@elysiajs/swagger'
@@ -10,6 +11,7 @@ import cfg from './config'
 
 const app = new Elysia()
   .use(swagger(cfg.SWAGGER_OPT))
+  .use(rateLimit(cfg.RATELIMIT_GLOBAL_OPT))
   .use(cors(cfg.CORS_OPT))
   .use(jwt(cfg.JWT_OPT))
   .onRequest(loggerMiddleware)

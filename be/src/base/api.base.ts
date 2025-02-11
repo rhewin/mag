@@ -32,7 +32,13 @@ const jsonError = (code?: string, data?: any, customMessage?: string) => {
   log.error(data, message || customMessage)
 
   if (code == 'VALIDATION') {
-    message = data.map((err: any) => err.schema.error.message).join(', ')
+    message = data
+      .map((err: any) => {
+        return err.schema.error
+          ? err.schema.error.message
+          : JSON.stringify(err.schema.errorMessage)
+      })
+      .join(', ')
     data = null
   } else {
     message = customMessage && customMessage != '' ? customMessage : message
