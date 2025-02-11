@@ -5,11 +5,10 @@ import type {
   IReqPagination,
   IReqCreateMember,
   IReqUpdateMember,
-} from './member'
+} from './member.types'
 
 const list = async (ctx: any) => {
-  let { pageNum, perPage } = ctx.query as IReqPagination
-
+  const { pageNum, perPage } = ctx.query as IReqPagination
   const [skip, take] = paginate(pageNum, perPage)
   const [data, err] = await attempt(() => memberQuery.getAll(skip, take))
   return err ? jsonError() : jsonOk(data)
@@ -17,32 +16,30 @@ const list = async (ctx: any) => {
 
 const create = async (ctx: any) => {
   const req = ctx.body as IReqCreateMember
-
-  const modifiedBy = '0'
-  const internalId = await memberQuery.generateInternalId()
-  const [data, err] = await attempt(() =>
-    memberQuery.create({ ...req, internalId, modifiedBy })
-  )
+  const inputted = {
+    ...req,
+    internalId: await memberQuery.generateInternalId(),
+    modifiedBy: ctx.user.internalId,
+  }
+  const [data, err] = await attempt(() => memberQuery.create(inputted))
   return err ? jsonError() : jsonOk(data)
 }
 
 export const update = async (ctx: any) => {
-  let { id } = ctx.params as { id: number }
   let req = ctx.body as IReqUpdateMember
-
-  const modifiedBy = '0'
+  const { id } = ctx.params as { id: number }
+  const modifiedBy = ctx.user.internalId
   const [data, err] = await attempt(() =>
-    memberQuery.update(Number(id), { ...req, modifiedBy })
+    memberQuery.updateByInternalId(Number(id), { ...req, modifiedBy })
   )
   return err ? jsonError() : jsonOk(data)
 }
 
 export const deleteById = async (ctx: any) => {
-  let { id } = ctx.params as { id: number }
-
-  const modifiedBy = '0'
+  const { id } = ctx.params as { id: number }
+  const modifiedBy = ctx.user.internalId
   const [data, err] = await attempt(() =>
-    memberQuery.softDeleteById(Number(id), modifiedBy)
+    memberQuery.softDeleteByInternalId(Number(id), modifiedBy)
   )
   return err ? jsonError() : jsonOk(data)
 }

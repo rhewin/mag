@@ -1,5 +1,6 @@
-import { attempt } from '@/utils/helper.util'
+import { attempt, decode64 } from '@/utils/helper.util'
 import { jsonError } from '@/base/api.base'
+import type { JwtPayload } from '@/base/index'
 
 export const authMiddleware = async (ctx: any) => {
   const token = ctx.request.headers
@@ -16,5 +17,6 @@ export const authMiddleware = async (ctx: any) => {
     return jsonError('UNAUTHORIZED')
   }
 
-  ctx.user = payload
+  const decoded = JSON.parse(decode64((payload as JwtPayload).data))
+  ctx.user = decoded
 }

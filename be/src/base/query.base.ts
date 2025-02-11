@@ -47,10 +47,31 @@ export class BaseQuery {
       },
     })
 
+  updateByInternalId = async (internalId: number, data: any) =>
+    this.table.update({
+      where: { internalId },
+      data: {
+        ...data,
+        updatedAt: new Date(),
+      },
+    })
+
   softDeleteById = async (id: number, modifiedBy: string) => {
     const dateNow = new Date()
     return this.table.update({
       where: { id },
+      data: {
+        modifiedBy,
+        updatedAt: dateNow,
+        deletedAt: dateNow,
+      },
+    })
+  }
+
+  softDeleteByInternalId = async (internalId: number, modifiedBy: string) => {
+    const dateNow = new Date()
+    return this.table.update({
+      where: { internalId },
       data: {
         modifiedBy,
         updatedAt: dateNow,

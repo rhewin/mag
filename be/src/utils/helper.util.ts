@@ -13,6 +13,11 @@ const attempt = async <T>(
   }
 }
 
+const decode64 = (encoded: string) =>
+  Buffer.from(encoded, 'base64').toString('utf-8')
+
+const encode64 = (str: string) => Buffer.from(str).toString('base64')
+
 const generatePIN = (length: number = 9) =>
   Array.from(
     { length },
@@ -77,6 +82,8 @@ const transformKeysToCamelCase = (obj: any): any => {
 
 export {
   attempt,
+  decode64,
+  encode64,
   generatePIN,
   generateUUID7,
   log,

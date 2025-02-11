@@ -1,4 +1,4 @@
-import type { IErrorMap } from './base'
+import type { IErrorMap } from '.'
 import { log, transformKeysToSnakeCase } from '@/utils/helper.util'
 
 const headers = { 'Content-Type': 'application/json' }
