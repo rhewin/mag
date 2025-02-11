@@ -1,4 +1,10 @@
-import { attempt, encode64, generateUUID7, paginate } from '@/utils/helper.util'
+import {
+  attempt,
+  encode64,
+  generateUUID7,
+  getUnixTimestamp,
+  paginate,
+} from '@/utils/helper.util'
 import { hashPassword, isPasswordValid } from '@/utils/auth.util'
 import { jsonOk, jsonError } from '@/base/api.base'
 import { adminQuery } from './admin.query'
@@ -26,10 +32,11 @@ const login = async (ctx: any) => {
   const jwtData = {
     uuid: admin.uuid,
     internalId: admin.internalId,
+    iat: getUnixTimestamp(),
   }
   const encodedJwtData = encode64(JSON.stringify(jwtData))
   const [data, err] = await attempt(() =>
-    ctx.jwt.sign({ data: encodedJwtData })
+    ctx.jwt.sign({ data: encodedJwtData }, { expiresIn: '1d' })
   )
   return err ? jsonError() : jsonOk(data)
 }

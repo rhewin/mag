@@ -7,7 +7,7 @@ const MemberStatus = {
   onreview: 'onreview',
 }
 
-export const createMemberValidation = {
+export const createValidation = {
   body: t.Object({
     fullname: validator.fullnameRule(),
     nickname: validator.nicknameRule(),
@@ -16,7 +16,7 @@ export const createMemberValidation = {
   }),
 }
 
-export const updateMemberValidation = {
+export const updateValidation = {
   body: t.Object({
     fullname: t.Optional(validator.fullnameRule()),
     nickname: t.Optional(validator.nicknameRule()),

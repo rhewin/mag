@@ -40,7 +40,7 @@ const RATELIMIT_LOGIN_OPT = {
 }
 
 const RATELIMIT_GUARD_OPT = {
-  max: 10, // 10 requests
+  max: 50, // 50 requests
   timeWindow: 60 * 1000, // per 60 seconds
   message: 'Too many requests. Please try again later.',
 }
@@ -51,7 +51,23 @@ const SWAGGER_OPT = {
       title: process.env.APP_NAME ?? '',
       version: '1.0.0',
       description: process.env.APP_DESCRIPTION ?? '',
+      contact: {
+        name: 'Rheza Sindhuwinata',
+        email: 'rheza.s@gmail.com',
+      },
+      license: {
+        name: 'MIT',
+        url: 'https://opensource.org/licenses/MIT',
+      },
     },
+    tags: [
+      { name: 'Health', description: 'Health check endpoints' },
+      { name: 'Admins', description: 'Admin management endpoints' },
+      { name: 'Members', description: 'Member management endpoints' },
+    ],
+  },
+  swaggerOptions: {
+    persistAuthorization: true, // Persist authorization headers (e.g., Bearer tokens)
   },
 }
 

@@ -13,7 +13,7 @@ export const loginValidation = {
   }),
 }
 
-export const createAdminValidation = {
+export const createValidation = {
   body: t.Object({
     fullname: validator.fullnameRule(),
     nickname: validator.nicknameRule(),
@@ -22,7 +22,7 @@ export const createAdminValidation = {
   }),
 }
 
-export const updateAdminValidation = {
+export const updateValidation = {
   body: t.Object({
     fullname: t.Optional(validator.fullnameRule()),
     nickname: t.Optional(validator.nicknameRule()),

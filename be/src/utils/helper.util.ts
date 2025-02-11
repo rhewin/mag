@@ -28,6 +28,9 @@ const log = pino(cfg.LOGGER_OPT)
 
 const generateUUID7 = () => globalThis.Bun.randomUUIDv7()
 
+const getUnixTimestamp = (secondsToAdd = 0) =>
+  Math.floor(Date.now() / 1000) + secondsToAdd
+
 const paginate = (
   pageNum: number | undefined,
   perPage: number | undefined
@@ -94,6 +97,7 @@ export {
   encode64,
   generatePIN,
   generateUUID7,
+  getUnixTimestamp,
   log,
   paginate,
   toSnakeCase,
