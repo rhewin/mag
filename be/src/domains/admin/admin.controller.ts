@@ -31,20 +31,20 @@ const add = async (ctx: any) => {
 }
 
 const edit = async (ctx: any) => {
-  let req = ctx.body as T.ReqUpdateAdmin
-  const { id } = ctx.params as { id: number }
+  const req = ctx.body as T.ReqUpdateAdmin
+  const { internalId } = ctx.params as { internalId: number }
   const modifiedBy = ctx.user.internalId
   const [data, err] = await attempt(() =>
-    adminQuery.updateByInternalId(Number(id), { ...req, modifiedBy })
+    adminQuery.updateByInternalId(Number(internalId), { ...req, modifiedBy })
   )
   return err ? jsonError() : jsonOk(data)
 }
 
 const wipe = async (ctx: any) => {
-  const { id } = ctx.params as { id: number }
+  const { internalId } = ctx.params as { internalId: number }
   const modifiedBy = ctx.user.internalId
   const [data, err] = await attempt(() =>
-    adminQuery.softDeleteByInternalId(Number(id), modifiedBy)
+    adminQuery.softDeleteByInternalId(Number(internalId), { modifiedBy })
   )
   return err ? jsonError() : jsonOk(data)
 }

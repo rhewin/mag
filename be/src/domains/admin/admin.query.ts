@@ -29,7 +29,7 @@ export class AdminQuery extends BaseQuery {
     })
   }
 
-  getByInternalId = async (internalId: string) =>
+  findByInternalId = async (internalId: string) =>
     this.table.findUnique({
       select: {
         id: true,
@@ -45,7 +45,7 @@ export class AdminQuery extends BaseQuery {
 
     do {
       pin = generatePIN()
-      exists = !!(await this.getByInternalId(`A${pin}`))
+      exists = !!(await this.findByInternalId(`A${pin}`))
     } while (exists)
 
     return `A${pin}`

@@ -28,6 +28,15 @@ export class BaseQuery {
       },
     })
 
+  getByInternalId = async (internalId: number) =>
+    this.table.findFirst({
+      ...this.selectField(this.visibleFields),
+      where: {
+        internalId,
+        deletedAt: null,
+      },
+    })
+
   getAll = async (skip: number, take: number) =>
     this.table.findMany({
       ...this.selectField(this.visibleFields),
@@ -56,24 +65,24 @@ export class BaseQuery {
       },
     })
 
-  softDeleteById = async (id: number, modifiedBy: string) => {
+  softDeleteById = async (id: number, data: any) => {
     const dateNow = new Date()
     return this.table.update({
       where: { id },
       data: {
-        modifiedBy,
+        ...data,
         updatedAt: dateNow,
         deletedAt: dateNow,
       },
     })
   }
 
-  softDeleteByInternalId = async (internalId: number, modifiedBy: string) => {
+  softDeleteByInternalId = async (internalId: number, data: any) => {
     const dateNow = new Date()
     return this.table.update({
       where: { internalId },
       data: {
-        modifiedBy,
+        ...data,
         updatedAt: dateNow,
         deletedAt: dateNow,
       },

@@ -11,7 +11,7 @@ async function main() {
         uuid: generateUUID7(),
         internalId: `A${generatePIN()}`,
         email: 'superadmin@abc.com',
-        password: await hashPassword('Test1234'),
+        password: await hashPassword('Test1234!'),
         fullname: 'Super Admin',
         nickname: 'Superadmin',
         modifiedBy: '0000000000',

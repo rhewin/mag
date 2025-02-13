@@ -33,7 +33,7 @@
           "response": []
         },
         {
-          "name": "Create",
+          "name": "Add",
           "request": {
             "method": "POST",
             "header": [],
@@ -55,7 +55,7 @@
           "response": []
         },
         {
-          "name": "Update",
+          "name": "Edit",
           "request": {
             "method": "PUT",
             "header": [],
@@ -75,7 +75,7 @@
               "variable": [
                 {
                   "key": "id",
-                  "value": "2"
+                  "value": "MT1DGB54QZ"
                 }
               ]
             }
@@ -83,7 +83,7 @@
           "response": []
         },
         {
-          "name": "Delete",
+          "name": "Wipe",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -102,6 +102,7 @@
           "response": []
         }
       ],
+      "description": "Manage CRUD Members",
       "auth": {
         "type": "bearer",
         "bearer": [
@@ -183,7 +184,7 @@
           "response": []
         },
         {
-          "name": "Create",
+          "name": "Add",
           "request": {
             "method": "POST",
             "header": [],
@@ -205,7 +206,7 @@
           "response": []
         },
         {
-          "name": "Update",
+          "name": "Edit",
           "request": {
             "method": "PUT",
             "header": [],
@@ -233,7 +234,7 @@
           "response": []
         },
         {
-          "name": "Delete",
+          "name": "Wipe",
           "request": {
             "method": "DELETE",
             "header": [],
@@ -252,6 +253,7 @@
           "response": []
         }
       ],
+      "description": "Manage CRUD Admins",
       "auth": {
         "type": "bearer",
         "bearer": [

@@ -9,8 +9,8 @@ const memberStatus = {
 
 const add = {
   body: t.Object({
-    fullname: validator.fullnameRule(),
-    nickname: validator.nicknameRule(),
+    fullname: t.Optional(validator.fullnameRule()),
+    nickname: t.Optional(validator.nicknameRule()),
     email: validator.emailRule(),
     phone: validator.phoneRule(),
   }),

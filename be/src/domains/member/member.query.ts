@@ -16,7 +16,7 @@ export class MemberQuery extends BaseQuery {
     super(prisma.member, visibleFields)
   }
 
-  getByInternalId = async (internalId: string) =>
+  findByInternalId = async (internalId: string) =>
     this.table.findUnique({
       select: {
         id: true,
@@ -31,11 +31,17 @@ export class MemberQuery extends BaseQuery {
     let exists: boolean
     do {
       pin = generatePIN()
-      exists = !!(await this.getByInternalId(`M${pin}`))
+      exists = !!(await this.findByInternalId(`M${pin}`))
     } while (exists)
 
     return `M${pin}`
   }
+
+  createNested = async (data: any) =>
+    this.table.create({
+      data: { ...data, memberProfile: { create: {} } },
+      ...this.selectField(this.visibleFields),
+    })
 }
 
 export const memberQuery = new MemberQuery()

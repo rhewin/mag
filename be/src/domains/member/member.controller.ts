@@ -17,25 +17,25 @@ const add = async (ctx: any) => {
     internalId: await memberQuery.generateInternalId(),
     modifiedBy: ctx.user.internalId,
   }
-  const [data, err] = await attempt(() => memberQuery.create(inputted))
+  const [data, err] = await attempt(() => memberQuery.createNested(inputted))
   return err ? jsonError() : jsonOk(data)
 }
 
 const edit = async (ctx: any) => {
-  let req = ctx.body as T.ReqUpdateMember
-  const { id } = ctx.params as { id: number }
+  const req = ctx.body as T.ReqUpdateMember
+  const { internalId } = ctx.params as { internalId: number }
   const modifiedBy = ctx.user.internalId
   const [data, err] = await attempt(() =>
-    memberQuery.updateByInternalId(Number(id), { ...req, modifiedBy })
+    memberQuery.updateByInternalId(Number(internalId), { ...req, modifiedBy })
   )
   return err ? jsonError() : jsonOk(data)
 }
 
 const wipe = async (ctx: any) => {
-  const { id } = ctx.params as { id: number }
+  const { internalId } = ctx.params as { internalId: number }
   const modifiedBy = ctx.user.internalId
   const [data, err] = await attempt(() =>
-    memberQuery.softDeleteByInternalId(Number(id), modifiedBy)
+    memberQuery.softDeleteByInternalId(Number(internalId), { modifiedBy })
   )
   return err ? jsonError() : jsonOk(data)
 }

@@ -1,7 +1,10 @@
+-- CreateEnum
+CREATE TYPE "Gender" AS ENUM ('MALE', 'FEMALE');
+
 -- CreateTable
 CREATE TABLE "admins" (
     "id" SERIAL NOT NULL,
-    "uuid" VARCHAR(50) NOT NULL DEFAULT '',
+    "uuid" VARCHAR(50) NOT NULL,
     "internal_id" VARCHAR(10) NOT NULL,
     "email" VARCHAR(255) NOT NULL,
     "password" VARCHAR(255) NOT NULL,
@@ -20,8 +23,8 @@ CREATE TABLE "admins" (
 CREATE TABLE "members" (
     "id" SERIAL NOT NULL,
     "internal_id" VARCHAR(10) NOT NULL,
-    "fullname" VARCHAR(100) NOT NULL,
-    "nickname" VARCHAR(50) NOT NULL,
+    "fullname" VARCHAR(100),
+    "nickname" VARCHAR(50),
     "email" VARCHAR(255),
     "phone" VARCHAR(20),
     "status" VARCHAR(20) NOT NULL DEFAULT 'onreview',
@@ -31,6 +34,19 @@ CREATE TABLE "members" (
     "deleted_at" TIMESTAMP(3),
 
     CONSTRAINT "members_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "member_profile" (
+    "id" SERIAL NOT NULL,
+    "member_id" INTEGER NOT NULL,
+    "gender" "Gender",
+    "nationality" VARCHAR(50),
+    "citizen_id" VARCHAR(50),
+    "religion" VARCHAR(50),
+    "verified" BOOLEAN NOT NULL DEFAULT false,
+
+    CONSTRAINT "member_profile_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -72,4 +88,16 @@ CREATE INDEX "idx_member_fullname" ON "members"("fullname");
 CREATE INDEX "idx_member_nickname" ON "members"("nickname");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "member_profile_member_id_key" ON "member_profile"("member_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "member_profile_citizen_id_key" ON "member_profile"("citizen_id");
+
+-- CreateIndex
+CREATE INDEX "idx_member_citizen_id" ON "member_profile"("citizen_id");
+
+-- CreateIndex
 CREATE INDEX "idx_category_name" ON "categories"("name");
+
+-- AddForeignKey
+ALTER TABLE "member_profile" ADD CONSTRAINT "member_profile_member_id_fkey" FOREIGN KEY ("member_id") REFERENCES "members"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
