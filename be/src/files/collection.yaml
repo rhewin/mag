@@ -1,0 +1,216 @@
+openapi: 3.0.0
+info:
+  title: cad
+  description: This is a sample application
+  version: 1.0.0
+  contact:
+    name: Rheza Sindhuwinata
+    email: rheza.s@gmail.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+servers:
+  - url: http://{{api_member}}
+  - url: http://{{api_admin}}
+  - url: http://{{api_url}}
+components:
+  securitySchemes:
+    noauthAuth:
+      type: http
+      scheme: noauth
+tags:
+  - name: Member
+  - name: Admin
+paths:
+  /v1/members/:
+    get:
+      tags:
+        - Member
+      summary: List
+      parameters:
+        - name: perPage
+          in: query
+          schema:
+            type: integer
+          example: '10'
+        - name: pageNum
+          in: query
+          schema:
+            type: integer
+          example: '1'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v1/members:
+    post:
+      tags:
+        - Member
+      summary: Create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                fullname: Dea Ananda
+                nickname: Dea
+                email: dea@abc.com
+                phone: '+6353082787087'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v1/members/{id}:
+    put:
+      tags:
+        - Member
+      summary: Update
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                status: inactive
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: integer
+          required: true
+          example: '2'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    delete:
+      tags:
+        - Member
+      summary: Delete
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: integer
+          required: true
+          example: '1'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v1/admins/login:
+    post:
+      tags:
+        - Admin
+      summary: Login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                email: superadmin@abc.com
+                password: Test1234
+      security:
+        - noauthAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v1/admins/:
+    get:
+      tags:
+        - Admin
+      summary: List
+      parameters:
+        - name: perPage
+          in: query
+          schema:
+            type: integer
+          example: '10'
+        - name: pageNum
+          in: query
+          schema:
+            type: integer
+          example: '1'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v1/admins:
+    post:
+      tags:
+        - Admin
+      summary: Create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                email: harry@abc.com
+                password: Test1234!
+                fullname: Harry James
+                nickname: Harry
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v1/admins/{id}:
+    put:
+      tags:
+        - Admin
+      summary: Update
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                nickname: B
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: integer
+          required: true
+          example: '2'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    delete:
+      tags:
+        - Admin
+      summary: Delete
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: integer
+          required: true
+          example: '1'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /:
+    get:
+      tags:
+        - default
+      summary: Health Check
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}

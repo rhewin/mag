@@ -46,32 +46,25 @@ const RATELIMIT_GUARD_OPT = {
 }
 
 const SWAGGER_OPT = {
-  documentation: {
-    info: {
-      title: process.env.APP_NAME ?? '',
-      version: '1.0.0',
-      description: process.env.APP_DESCRIPTION ?? '',
-      contact: {
-        name: 'Rheza Sindhuwinata',
-        email: 'rheza.s@gmail.com',
-      },
-      license: {
-        name: 'MIT',
-        url: 'https://opensource.org/licenses/MIT',
-      },
+  defaultTag: undefined,
+  info: {
+    title: process.env.APP_NAME ?? '',
+    version: '1.0.0',
+    description: process.env.APP_DESCRIPTION ?? '',
+    contact: {
+      name: 'Rheza Sindhuwinata',
+      email: 'rheza.s@gmail.com',
     },
-    tags: [
-      { name: 'Health', description: 'Health check endpoints' },
-      { name: 'Admins', description: 'Admin management endpoints' },
-      { name: 'Members', description: 'Member management endpoints' },
-    ],
-  },
-  swaggerOptions: {
-    persistAuthorization: true, // Persist authorization headers (e.g., Bearer tokens)
+    license: {
+      name: 'MIT',
+      url: 'https://opensource.org/licenses/MIT',
+    },
   },
 }
 
 export default {
+  APP_NAME: process.env.APP_NAME ?? '',
+  APP_DESCRIPTION: process.env.APP_DESCRIPTION ?? '',
   APP_PORT: Number(process.env.APP_PORT) || 3000,
   CHARS_PIN: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
   CORS_OPT,

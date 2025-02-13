@@ -8,15 +8,49 @@ import {
 import { hashPassword, isPasswordValid } from '@/utils/auth.util'
 import { jsonOk, jsonError } from '@/base/api.base'
 import { adminQuery } from './admin.query'
-import type {
-  IReqLogin,
-  IReqPagination,
-  IReqCreateAdmin,
-  IReqUpdateAdmin,
-} from './admin.types'
+import type * as T from './admin.types'
+
+const list = async (ctx: any) => {
+  const { pageNum, perPage } = ctx.query as T.ReqPagination
+  const [skip, take] = paginate(pageNum, perPage)
+  const [data, err] = await attempt(() => adminQuery.getAll(skip, take))
+  return err ? jsonError() : jsonOk(data)
+}
+
+const add = async (ctx: any) => {
+  const req = ctx.body as T.ReqCreateAdmin
+  const inputted = {
+    ...req,
+    uuid: generateUUID7(),
+    internalId: await adminQuery.generateInternalId(),
+    password: await hashPassword(req.password),
+    modifiedBy: ctx.user.internalId,
+  }
+  const [data, err] = await attempt(() => adminQuery.create(inputted))
+  return err ? jsonError() : jsonOk(data)
+}
+
+const edit = async (ctx: any) => {
+  let req = ctx.body as T.ReqUpdateAdmin
+  const { id } = ctx.params as { id: number }
+  const modifiedBy = ctx.user.internalId
+  const [data, err] = await attempt(() =>
+    adminQuery.updateByInternalId(Number(id), { ...req, modifiedBy })
+  )
+  return err ? jsonError() : jsonOk(data)
+}
+
+const wipe = async (ctx: any) => {
+  const { id } = ctx.params as { id: number }
+  const modifiedBy = ctx.user.internalId
+  const [data, err] = await attempt(() =>
+    adminQuery.softDeleteByInternalId(Number(id), modifiedBy)
+  )
+  return err ? jsonError() : jsonOk(data)
+}
 
 const login = async (ctx: any) => {
-  const { email, password } = ctx.body as IReqLogin
+  const { email, password } = ctx.body as T.ReqLogin
 
   const [admin, errAdmin] = await attempt(() =>
     adminQuery.getPasswordByEmail(email)
@@ -41,49 +75,10 @@ const login = async (ctx: any) => {
   return err ? jsonError() : jsonOk(data)
 }
 
-const list = async (ctx: any) => {
-  const { pageNum, perPage } = ctx.query as IReqPagination
-  const [skip, take] = paginate(pageNum, perPage)
-  const [data, err] = await attempt(() => adminQuery.getAll(skip, take))
-  return err ? jsonError() : jsonOk(data)
-}
-
-const create = async (ctx: any) => {
-  const req = ctx.body as IReqCreateAdmin
-  const inputted = {
-    ...req,
-    uuid: generateUUID7(),
-    internalId: await adminQuery.generateInternalId(),
-    password: await hashPassword(req.password),
-    modifiedBy: ctx.user.internalId,
-  }
-  const [data, err] = await attempt(() => adminQuery.create(inputted))
-  return err ? jsonError() : jsonOk(data)
-}
-
-export const update = async (ctx: any) => {
-  let req = ctx.body as IReqUpdateAdmin
-  const { id } = ctx.params as { id: number }
-  const modifiedBy = ctx.user.internalId
-  const [data, err] = await attempt(() =>
-    adminQuery.updateByInternalId(Number(id), { ...req, modifiedBy })
-  )
-  return err ? jsonError() : jsonOk(data)
-}
-
-export const deleteById = async (ctx: any) => {
-  const { id } = ctx.params as { id: number }
-  const modifiedBy = ctx.user.internalId
-  const [data, err] = await attempt(() =>
-    adminQuery.softDeleteByInternalId(Number(id), modifiedBy)
-  )
-  return err ? jsonError() : jsonOk(data)
-}
-
 export default {
-  login,
   list,
-  create,
-  update,
-  deleteById,
+  add,
+  edit,
+  wipe,
+  login,
 }

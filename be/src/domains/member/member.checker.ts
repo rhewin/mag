@@ -1,13 +1,13 @@
 import { t } from 'elysia'
-import * as validator from '@/base/validator.base'
+import * as validator from '@/base/checker.base'
 
-const MemberStatus = {
+const memberStatus = {
   active: 'active',
   inactive: 'inactive',
   onreview: 'onreview',
 }
 
-export const createValidation = {
+const add = {
   body: t.Object({
     fullname: validator.fullnameRule(),
     nickname: validator.nicknameRule(),
@@ -16,12 +16,17 @@ export const createValidation = {
   }),
 }
 
-export const updateValidation = {
+const edit = {
   body: t.Object({
     fullname: t.Optional(validator.fullnameRule()),
     nickname: t.Optional(validator.nicknameRule()),
     email: t.Optional(validator.emailRule()),
     phone: t.Optional(validator.phoneRule()),
-    status: t.Optional(validator.statusRule(MemberStatus)),
+    status: t.Optional(validator.statusRule(memberStatus)),
   }),
+}
+
+export default {
+  add,
+  edit,
 }

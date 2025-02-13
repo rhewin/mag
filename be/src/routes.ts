@@ -1,10 +1,13 @@
 import memberRoutes from './domains/member/member.router'
 import adminRoutes from './domains/admin/admin.router'
-import { HealthSchema } from './schemas/health.schema'
+import { toSwaggerYaml } from './utils/swagger.util'
 import { jsonOk } from './base/api.base'
 
-export const route = (app: any) =>
+const routes = (app: any) =>
   app
-    .get('/', () => jsonOk(null, 'Welcome to the API!'), HealthSchema)
+    .get('/', () => jsonOk(null, 'Welcome!'))
+    .get('/generate-swagger', () => toSwaggerYaml())
     .use(adminRoutes)
     .use(memberRoutes)
+
+export default routes

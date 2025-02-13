@@ -1,21 +1,21 @@
-export interface IReqLogin {
+export interface ReqLogin {
   email: string
   password: string
 }
 
-export interface IReqPagination {
+export interface ReqPagination {
   pageNum?: number
   perPage?: number
 }
 
-export interface IReqCreateAdmin {
+export interface ReqCreateAdmin {
   email: string
   password: string
   fullname: string
   nickname: string
 }
 
-export interface IReqUpdateAdmin {
+export interface ReqUpdateAdmin {
   email?: string
   password?: string
   fullname?: string

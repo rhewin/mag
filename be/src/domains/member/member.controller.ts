@@ -1,21 +1,17 @@
 import { attempt, paginate } from '@/utils/helper.util'
 import { jsonOk, jsonError } from '@/base/api.base'
 import { memberQuery } from './member.query'
-import type {
-  IReqPagination,
-  IReqCreateMember,
-  IReqUpdateMember,
-} from './member.types'
+import type * as T from './member.types'
 
 const list = async (ctx: any) => {
-  const { pageNum, perPage } = ctx.query as IReqPagination
+  const { pageNum, perPage } = ctx.query as T.ReqPagination
   const [skip, take] = paginate(pageNum, perPage)
   const [data, err] = await attempt(() => memberQuery.getAll(skip, take))
   return err ? jsonError() : jsonOk(data)
 }
 
-const create = async (ctx: any) => {
-  const req = ctx.body as IReqCreateMember
+const add = async (ctx: any) => {
+  const req = ctx.body as T.ReqCreateMember
   const inputted = {
     ...req,
     internalId: await memberQuery.generateInternalId(),
@@ -25,8 +21,8 @@ const create = async (ctx: any) => {
   return err ? jsonError() : jsonOk(data)
 }
 
-export const update = async (ctx: any) => {
-  let req = ctx.body as IReqUpdateMember
+const edit = async (ctx: any) => {
+  let req = ctx.body as T.ReqUpdateMember
   const { id } = ctx.params as { id: number }
   const modifiedBy = ctx.user.internalId
   const [data, err] = await attempt(() =>
@@ -35,7 +31,7 @@ export const update = async (ctx: any) => {
   return err ? jsonError() : jsonOk(data)
 }
 
-export const deleteById = async (ctx: any) => {
+const wipe = async (ctx: any) => {
   const { id } = ctx.params as { id: number }
   const modifiedBy = ctx.user.internalId
   const [data, err] = await attempt(() =>
@@ -46,7 +42,7 @@ export const deleteById = async (ctx: any) => {
 
 export default {
   list,
-  create,
-  update,
-  deleteById,
+  add,
+  edit,
+  wipe,
 }

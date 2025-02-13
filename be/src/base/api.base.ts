@@ -1,9 +1,9 @@
-import type { IErrorMap } from '.'
+import type { ErrorMap } from '.'
 import { log, transformKeysToSnakeCase } from '@/utils/helper.util'
 
 const headers = { 'Content-Type': 'application/json' }
 
-const errorMap: Record<string, IErrorMap> = {
+const errorMap: Record<string, ErrorMap> = {
   VALIDATION: { status: 400, message: 'Validation failed' },
   NOT_FOUND: { status: 404, message: 'Route not found' },
   UNAUTHORIZED: { status: 401, message: 'Unauthorized access' },

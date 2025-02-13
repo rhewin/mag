@@ -1,4 +1,4 @@
-export interface IErrorMap {
+export interface ErrorMap {
   status: number
   message: string
 }
