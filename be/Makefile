@@ -1,5 +1,5 @@
 # Variables
-COMPOSE_FILE := docker-compose.yml
+COMPOSE_FILE := .docker/docker-compose.yml
 
 # Default target
 help:

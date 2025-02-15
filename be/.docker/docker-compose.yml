@@ -3,25 +3,32 @@ services:
     image: bitnami/postgresql:latest
     container_name: cad-db
     env_file:
-      - .env
+      - docker.env
     volumes:
       - db-data:/bitnami/postgresql # Persist database data
     ports:
       - '5432:5432' # Expose PostgreSQL port
     networks:
       - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-user}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   api:
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ..
+      dockerfile: .docker/Dockerfile
     container_name: cad-api
+    restart: unless-stopped
     env_file:
-      - .env
+      - ../.env
     ports:
-      - '3000:3000' # Expose API port
+      - '3000:3000'
     depends_on:
-      - db # Ensure the database starts first
+      db:
+        condition: service_healthy # Wait until the database is fully ready
     networks:
       - app-network
 

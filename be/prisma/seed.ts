@@ -5,22 +5,22 @@ import { hashPassword } from '@/utils/auth.util'
 const prisma = new PrismaClient()
 
 async function main() {
-  await prisma.admin.createMany({
-    data: [
-      {
-        uuid: generateUUID7(),
-        internalId: `A${generatePIN()}`,
-        email: 'superadmin@abc.com',
-        password: await hashPassword('Test1234!'),
-        fullname: 'Super Admin',
-        nickname: 'Superadmin',
-        modifiedBy: '0000000000',
-      },
-    ],
+  await prisma.admin.upsert({
+    where: { email: 'superadmin@abc.com' }, // Unique field to check existence
+    update: {}, // Do nothing if exists
+    create: {
+      uuid: generateUUID7(),
+      internalId: `A${generatePIN()}`,
+      email: 'superadmin@abc.com',
+      password: await hashPassword('Test1234!'),
+      fullname: 'Super Admin',
+      nickname: 'Superadmin',
+      modifiedBy: '0000000000',
+    },
   })
-
   console.log('Seeded admins')
 
+  await prisma.$executeRaw`TRUNCATE TABLE "categories" RESTART IDENTITY CASCADE;`
   await prisma.category.createMany({
     data: [
       { name: 'Lainnya' },
@@ -34,7 +34,6 @@ async function main() {
       { name: 'Teknologi' },
     ],
   })
-
   console.log('Seeded categories')
 }
 
